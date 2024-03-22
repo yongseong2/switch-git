@@ -23,7 +23,7 @@ Before you can use the Git Configuration Tool, ensure you have the following ins
 To use the tool, simply run the script with Python:
 
 ```bash
-python git_config_tool.py
+python switch-git.py
 ```
 
 The GUI will launch, providing you with buttons to perform each of the available actions. Follow the prompts as needed to manage your Git configuration.
