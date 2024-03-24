@@ -14,7 +14,7 @@ def delete_git_credentials():
             # Linux용 자격증명 삭제 코드
             pass
     except subprocess.CalledProcessError as e:
-        log_text.insert(tk.END, f"Failed to delete credentials: {e}\n")
+        log_text.insert(tk.END, f"Already deleted: {e}\n")
 
 def set_git_user(name, email):
     try:
