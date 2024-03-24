@@ -1,4 +1,4 @@
-# Git Configuration Tool
+# Github User Switch Tool
 
 ## Overview
 
