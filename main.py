@@ -7,7 +7,7 @@ import json
 # 사용자 정보 저장
 def save_user_info(info_dict):
     try:
-        with open('git_user_info.json', 'w') as file:
+        with open('./git_user_info.json', 'w') as file:
             json.dump(info_dict, file)
     except Exception as e:
         print(f"Error saving user info: {e}")
@@ -15,7 +15,7 @@ def save_user_info(info_dict):
 # 사용자 정보 불러오기
 def load_user_info():
     try:
-        with open('git_user_info.json', 'r') as file:
+        with open('./git_user_info.json', 'r') as file:
             data = file.read()
             # 파일 내용이 비어있는 경우 빈 딕셔너리 반환
             if not data:
