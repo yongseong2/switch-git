@@ -28,13 +28,20 @@ def load_user_info():
 def create_git_user():
     user_name = simpledialog.askstring("Input", "Enter your name:")
     user_email = simpledialog.askstring("Input", "Enter your email:")
-    if user_name and user_email:
+    user_token = simpledialog.askstring("Input", "Enter your token:")
+
+    if user_name and user_email and user_token:  # 이름, 이메일, 토큰 값이 모두 입력된 경우
         user_info = load_user_info()
         new_key = f"User{len(user_info) + 1}"  # 새로운 키 생성
-        user_info[new_key] = {'name': user_name, 'email': user_email}
+        user_info[new_key] = {
+            'name': user_name,
+            'email': user_email,
+            'token': user_token  # 토큰 값 저장
+        }
         save_user_info(user_info)  # 수정된 정보 저장
     else:
-        log_text.insert(tk.END, "Invalid input. Please enter both name and email.\n")
+        log_text.insert(tk.END, "Invalid input. Please enter name, email, and token.\n")
+
 
 
 def delete_git_credentials():
@@ -50,25 +57,36 @@ def delete_git_credentials():
     except subprocess.CalledProcessError as e:
         log_text.insert(tk.END, f"Already deleted: {e}\n")
 
-def set_git_user(name, email):
+def set_git_user(name, email, token):
     try:
         subprocess.run(["git", "config", "--global", "user.name", name], check=True)
         subprocess.run(["git", "config", "--global", "user.email", email], check=True)
         log_text.insert(tk.END, "Git user info set successfully.\n")
-        return True  # 성공적으로 설정되었음을 나타내는 True 반환
+        
+        if platform.system() == 'Windows':
+            add_git_credentials(name, token)
+        return True
     except subprocess.CalledProcessError as e:
         log_text.insert(tk.END, f"Failed to set user info: {e}\n")
-        return False  # 실패했음을 나타내는 False 반환
+        return False
+
+def add_git_credentials(username, token):
+    try:
+        if platform.system() == 'Windows':
+            subprocess.run(["cmdkey", "/generic:git:https://github.com", "/user:" + username, "/pass:" + token], check=True)
+            log_text.insert(tk.END, "Git credentials added successfully.\n")
+    except subprocess.CalledProcessError as e:
+        log_text.insert(tk.END, f"Failed to add credentials: {e}\n")
+
 
 def choose_user_info():
     user_info = load_user_info()
     choices = []
     for key, value in user_info.items():
-        name_email_str = f"ID: {value['name']} / Email: {value['email']}"  # 사용자 정보를 문자열로 포맷팅
-        choices.append(name_email_str)
+        choices.append(f"ID: {value['name']} / Email: {value['email']}")
     
     choice_str = "\n".join(f"{i+1}. {choice}" for i, choice in enumerate(choices))
-    choice_str += f"\n{len(choices)+1}. Enter new user field name"
+    choice_str += f"\n{len(choices)+1}. Enter new user"
     user_choice = simpledialog.askstring("Choose User Info", f"Choose user number:\n{choice_str}")
     
     try:
@@ -79,11 +97,9 @@ def choose_user_info():
     
     if user_choice < len(choices):
         selected_key = list(user_info.keys())[user_choice]
-        success = set_git_user(user_info[selected_key]['name'], user_info[selected_key]['email'])
-        if success:
-            delete_git_credentials()
-    elif user_choice == len(choices):  # 새로운 사용자 정보 입력
-        create_git_user()  # 사용자 생성 함수 호출
+        set_git_user(user_info[selected_key]['name'], user_info[selected_key]['email'], user_info[selected_key]['token'])
+    elif user_choice == len(choices):
+        create_git_user()
     else:
         log_text.insert(tk.END, "Invalid choice.\n")
 
