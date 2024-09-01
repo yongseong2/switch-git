@@ -106,10 +106,10 @@ def choose_user_info():
 
 def list_git_config():
     try:
-        result = subprocess.run(["git", "config", "--list"], capture_output=True, text=True)
+        result = subprocess.run(["git", "config", "--global", "--list"], capture_output=True, text=True)
         log_text.insert(tk.END, result.stdout + "\n")
     except subprocess.CalledProcessError as e:
-        log_text.insert(tk.END, f"Failed to list git config: {e}\n")
+        log_text.insert(tk.END, f"Failed to list git config --global --list: {e}\n")
 
 
 def create_ui():
@@ -120,18 +120,18 @@ def create_ui():
     frame = tk.Frame(window)
     frame.pack(padx=20, pady=20)
 
-    create_user_button = tk.Button(frame, text="Create Git User", command=create_git_user)  # 새 버튼 추가
+    create_user_button = tk.Button(frame, text="계정 생성", command=create_git_user)  # 새 버튼 추가
     create_user_button.pack(fill=tk.X)
 
 
-    user_info_button = tk.Button(frame, text="Set Git User Info", command=choose_user_info)
+    user_info_button = tk.Button(frame, text="계정 설정", command=choose_user_info)
     user_info_button.pack(fill=tk.X)
 
 
-    list_config_button = tk.Button(frame, text="List Git Config", command=list_git_config)
+    list_config_button = tk.Button(frame, text="계정 정보 보기", command=list_git_config)
     list_config_button.pack(fill=tk.X)
 
-    delete_button = tk.Button(frame, text="Delete Git Credentials", command=delete_git_credentials)
+    delete_button = tk.Button(frame, text="로컬에 등록된 계정 삭제", command=delete_git_credentials)
     delete_button.pack(fill=tk.X)
 
     log_text = tk.Text(frame, height=20, width=100)
