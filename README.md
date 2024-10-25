@@ -28,7 +28,7 @@ No additional installation steps are required beyond having Python and Git insta
 To use the tool, run the script with Python from your terminal or command prompt:
 
 ```bash
-python switch-git.py
+python main.py
 ```
 
 The GUI will launch, providing you with buttons to perform each of the available actions. Follow the on-screen prompts to manage your Git and GitHub configurations.
